@@ -1,37 +1,41 @@
 const express = require('express');
-const chalk = require('chalk'); 
+const chalk = require('chalk');
+
+// 1. יצירת האפליקציה תחילה
 const app = express();
+const PORT = 5000; 
 
-// שימוש בפורט דינמי או 3000 כברירת מחדל
-const PORT = process.env.PORT || 3000;
+// 2. הגדרת ה-Middleware לקריאת JSON
+app.use(express.json());
 
-const courses = [
-    { id: 101, name: "מבוא ל-Node.js", description: "קורס בסיסי ללימוד פיתוח צד שרת וסביבת Node.js" },
-    { id: 102, name: "פיתוח עם Express", description: "למידת יצירת שרתים, ניתובים ונקודות קצה (API)" },
-    { id: 103, name: "בסיסי נתונים ו-SQL", description: "אינטגרציה של מסדי נתונים עם אפליקציות Backend" }
-];
+// ייבוא הקבצים של הקורסים והתלמידים
+const coursesRouter = require('./courses');
+const studentsRouter = require('./students');
 
-// שינוי הכתובת לפורמט של API
-app.get('/api/courses', (req, res) => {
-    try {
-        console.log(chalk.bold.yellow('\n--- התקבלה בקשה חדשה! מציג את רשימת הקורסים: ---'));
-
-        courses.forEach(course => {
-            console.log(
-                chalk.cyan(`[ID: ${course.id}] `) + 
-                chalk.green.bold(`שם: ${course.name}`) + 
-                chalk.white(` - תיאור: ${course.description}`)
-            );
-        });
-
-        res.json(courses);
-    } catch (error) {
-        // טיפול בסיסי בשגיאות במקרה ומשהו ייכשל
-        console.error(chalk.red('שגיאה בעיבוד הבקשה:', error));
-        res.status(500).json({ error: 'שגיאת שרת פנימית' });
-    }
+// 3. הגדרת הנתיבים
+app.get('/', (req, res) => {
+    res.json({
+        status: "success",
+        message: "The server is running beautifully",
+        description: "This is a school management API for courses and students"
+    });
 });
 
+app.use('/courses', coursesRouter);
+app.use('/students', studentsRouter);
+
+// תפיסת כל נתיב לא מוכר והחזרת שגיאה בפורמט JSON
+app.use((req, res) => {
+    res.status(404).json({
+        status: "error",
+        message: "Resource not found"
+    });
+});
+
+// הפעלת השרת
 app.listen(PORT, () => {
-    console.log(chalk.magenta.bold(`\n השרת רץ ומקשיב בהצלחה בכתובת: http://localhost:${PORT}/api/courses`));
+    console.log(chalk.green(`Server is running beautifully on port ${PORT}`));
 });
+
+// השארת לולאת האירועים פעילה עבור המחשב שלך
+setInterval(() => {}, 600000);
