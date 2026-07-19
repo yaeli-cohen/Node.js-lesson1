@@ -16,6 +16,7 @@
 - POST /courses (יצירה בעזרת req.body)
 - PUT /courses/:id (עדכון מלא)
 - DELETE /courses/:id (מחיקה בעזרת findIndex ו-splice)
+
 הקוד כלל שימוש ב-app.use(express.json()) כדי לאפשר קריאת נתונים מ-req.body.
 
 --------------------------------------------------
