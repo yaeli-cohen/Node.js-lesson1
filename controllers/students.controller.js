@@ -12,20 +12,16 @@ const getStudentById = (req, res) => {
 };
 
 const createStudent = (req, res) => {
+    // אין צורך בבדיקת if (!name || !email) - המידלוור כבר וידא שהם קיימים!
     const { name, email } = req.body;
-    if (!name || !email) {
-        return res.status(400).json({ error: "Name and email are required" });
-    }
     const newStudent = studentsService.create(name, email);
     res.status(201).json(newStudent);
 };
 
 const updateStudent = (req, res) => {
     const id = parseInt(req.params.id);
-    const { name, email } = req.body;
-    if (!name || !email) {
-        return res.status(400).json({ error: "Name and email are required" });
-    }
+    const { name, email } = req.body; // המידע כאן כבר מאומת ובטוח לשימוש
+    
     const updatedStudent = studentsService.update(id, name, email);
     if (!updatedStudent) return res.status(404).json({ error: "Student not found" });
     res.status(200).json(updatedStudent);

@@ -14,10 +14,8 @@ const getCourseById = (req, res) => {
 };
 
 const createCourse = (req, res) => {
+    // הנתונים מגיעים לכאן כשהם כבר מאומתים ובטוחים
     const { name, hours } = req.body;
-    if (!name || !hours) {
-        return res.status(400).json({ error: "Name and hours are required fields" });
-    }
     const newCourse = coursesService.create(name, hours);
     res.status(201).json(newCourse);
 };
@@ -25,9 +23,7 @@ const createCourse = (req, res) => {
 const updateCourse = (req, res) => {
     const id = parseInt(req.params.id);
     const { name, hours } = req.body;
-    if (!name || !hours) {
-        return res.status(400).json({ error: "Name and hours are required for full update" });
-    }
+    
     const updatedCourse = coursesService.update(id, name, hours);
     if (!updatedCourse) {
         return res.status(404).json({ error: "Course not found" });
